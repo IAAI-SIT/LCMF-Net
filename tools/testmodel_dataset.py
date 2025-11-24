@@ -1,0 +1,59 @@
+import numpy as np
+import torch
+import torch.utils.data
+import scipy.ndimage
+import torchvision.transforms as transforms
+import albumentations as A
+
+
+class Dataset(torch.utils.data.Dataset):
+    def __init__(self, args, img_paths, mask_paths, aug=False):
+        self.args = args
+        self.img_paths = img_paths
+        self.mask_paths = mask_paths
+        self.aug = aug
+        # 创建增强序列
+        self.transform = A.Compose([
+            A.HorizontalFlip(p=0.5),
+            A.Rotate(limit=30),
+            A.RandomBrightnessContrast(p=0.2),
+        ])
+
+    def __len__(self):
+        return len(self.img_paths)
+
+    def __getitem__(self, idx):
+        img_path = self.img_paths[idx]
+        mask_path = self.mask_paths[idx]
+
+        npimage = np.load(img_path)
+        npmask = np.load(mask_path)
+        npimage = npimage.transpose((2, 0, 1))
+        WT_Label = npmask.copy()
+        WT_Label[npmask == 1] = 1.
+        WT_Label[npmask == 2] = 1.
+        WT_Label[npmask == 4] = 1.
+        TC_Label = npmask.copy()
+        TC_Label[npmask == 1] = 1.
+        TC_Label[npmask == 2] = 0.
+        TC_Label[npmask == 4] = 1.
+        ET_Label = npmask.copy()
+        ET_Label[npmask == 1] = 0.
+        ET_Label[npmask == 2] = 0.
+        ET_Label[npmask == 4] = 1.
+
+        nplabel = np.empty((240, 240, 3))
+        nplabel[:, :, 0] = WT_Label
+        nplabel[:, :, 1] = TC_Label
+        nplabel[:, :, 2] = ET_Label
+        nplabel = nplabel.transpose((2, 0, 1))
+        nplabel = nplabel.astype("float32")
+        npimage = npimage.astype("float32")
+
+        # # 使用 scipy.ndimage.zoom 进行缩放
+        zoom_factor = [1, 256 / 240, 256 / 240]
+        nplabel = scipy.ndimage.zoom(nplabel, zoom_factor, order=3)
+        npimage = scipy.ndimage.zoom(npimage, zoom_factor, order=3)
+        tensor_image = torch.from_numpy(npimage)
+        tensor_label = torch.from_numpy(nplabel)
+        return tensor_image, tensor_label
