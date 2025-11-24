@@ -3,12 +3,8 @@
 **Now we have open-sourced the pre-processing, training, inference, and metrics computation codes.**
 
 Cao, G., Yang, Z., Liang, W., Zhang, S., Zhong, T., Mao, H., Wang, D., Zong, M. LCMF-Net: A Lightweight Collaborative Multimodal Fusion Network for Brain Tumor Segmentation. Neural Networks, 2026(195): 108257. https://doi.org/10.1016/j.neunet.2025.108257. (IF 6.3)
-
 ![](images/Figure_2.png)
-
 ![](images/Figure_7.png)
-
-Our advantage in speed and memory.
 ![](images/Figure_8.png)
 
 ## Contact 
