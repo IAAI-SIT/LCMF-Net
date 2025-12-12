@@ -7,8 +7,6 @@ Cao, G., Yang, Z., Liang, W., Zhang, S., Zhong, T., Mao, H., Wang, D., Zong, M. 
 ![](images/Figure_7.png)
 ![](images/Figure_8.png)
 
-## Contact 
-If you have any questions about our project, please feel free to contact us by email at zJuny_e@163.com or via WeChat at 19121670239.
 
 ## Environment install
 Clone this repository and navigate to the root directory of the project.
